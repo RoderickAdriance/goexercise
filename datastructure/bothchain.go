@@ -1,4 +1,4 @@
-package linkedtable
+package datastructure
 
 type DNode struct {
 	data interface{}
