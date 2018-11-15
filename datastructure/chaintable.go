@@ -19,10 +19,10 @@ func (list *List) Init() {
 	list.tail = nil
 }
 
-func (list *List) Append(node *Node) bool {
-	if node == nil {
-		return false
-	}
+func (list *List) Append(data interface{}) bool {
+	node := new(Node)
+	node.data = data
+
 	//改进版写法
 	if list.size == 0 {
 		list.head = node
@@ -50,10 +50,10 @@ func (list *List) Append(node *Node) bool {
 	}*/
 }
 
-func (list *List) Insert(node *Node) bool {
-	if node == nil {
-		return false
-	}
+func (list *List) Insert(data interface{}) bool {
+	node := new(Node)
+	node.data = data
+
 	node.next = list.head
 	list.head = node
 	list.size++
@@ -77,12 +77,16 @@ func (list *List) InsertPosition(i int, node *Node) bool {
 	return true
 }
 
-func (list *List) Remove(i int, node *Node) bool {
+func (list *List) Remove(i int) *Node {
+	var item *Node
+
 	if i >= list.size {
-		return false
+		return nil
 	}
+
 	if i == 0 {
 		node := list.head
+		item = node
 		list.head = node.next
 		// 如果只有一个元素，那尾部也要调整
 		if list.size == 1 {
@@ -93,17 +97,27 @@ func (list *List) Remove(i int, node *Node) bool {
 		for j := 1; j < i; j++ {
 			preItem = preItem.next
 		}
-
-		node = preItem.next
+		node := preItem.next
+		item = node
 		preItem.next = node.next
-
 		if i == (list.size - 1) { // 若删除的尾部，尾部指针需要调整
 			list.tail = preItem
 		}
 	}
 
 	list.size--
-	return true
+	return item
+}
+
+func (list *List) RemoveData(data interface{}) bool {
+	head := list.head
+	for ; head != list.tail; head = head.next {
+		if head.data == data {
+			return true
+		}
+	}
+
+	return false
 }
 
 func (list *List) Get(i int) *Node {
@@ -115,4 +129,15 @@ func (list *List) Get(i int) *Node {
 		item = item.next
 	}
 	return item
+}
+
+func (list *List) IsMember(data interface{}) bool {
+	node := list.head
+
+	for ; node != list.tail; node = node.next {
+		if node.data == data {
+			return true
+		}
+	}
+	return false
 }
